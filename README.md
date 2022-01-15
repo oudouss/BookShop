@@ -57,8 +57,8 @@ symfony console doctrine:fixtures:load --no-interaction
 
 #### Generate the SSL keys:
 
-``` bash
-php bin/console lexik:jwt:generate-keypair
+```
+symfony console lexik:jwt:generate-keypair
 ```
 
 Your keys will land in `config/jwt/private.pem` and `config/jwt/public.pem` (unless you configured a different path).
@@ -70,9 +70,10 @@ Available options:
 Otherwise, an error will be raised to prevent you from overwriting your keys accidentally.
 
 **test Users**
-User (email:user@app.com/password:password)
+- User  `user@app.com/password`
+- Admin `admin@app.com/password`
 
-Admin User (email:admin@app.com/password:password)
+
 
 **Activate TLS support on the Local Web Server**
 
@@ -86,6 +87,6 @@ symfony.exe server:ca:install
 symfony server:start -d
 ```
 
-The server started on the port 8000. Open the website <https://127.0.0.1:8000/> in a browser.
-Go to Api Docs. Open the website <https://127.0.0.1:8000/api> in a browser.
+- The server started on the port 8000. Open the website <https://127.0.0.1:8000> in a browser.
+- Go to Api Docs. Open the website <https://127.0.0.1:8000/api> in a browser.
 
