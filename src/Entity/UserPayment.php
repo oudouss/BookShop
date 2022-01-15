@@ -2,17 +2,56 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\UserPaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\UserOwnedInterface;
+use App\Repository\UserPaymentRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserPaymentRepository::class)]
-#[ApiResource]
-class UserPayment
+#[ApiResource(
+    denormalizationContext:['groups' => ['payment:write']],
+    collectionOperations: [
+        'get' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+        'post' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+    ],
+    itemOperations: [
+        'get' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+        'patch' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+        'delete' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+    ]
+)]
+class UserPayment implements UserOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user:read'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userPayments')]
@@ -20,15 +59,19 @@ class UserPayment
     private $user;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'user:write', 'payment:write'])]
     private $type;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'user:write', 'payment:write'])]
     private $provider;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'user:write', 'payment:write'])]
     private $account;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'user:write', 'payment:write'])]
     private $expiry;
 
     public function getId(): ?int

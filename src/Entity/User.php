@@ -2,16 +2,59 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use ApiPlatform\Core\Action\NotFoundAction;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\ProfileController;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext:['groups' => ['user:read']],
+    denormalizationContext:['groups' => ['user:write']],
+    collectionOperations: [
+        'get' =>[
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
+        ],
+        'post' => [
+            'pagination_enabled' => false,
+            'path' => '/register',
+            'method' => 'post',
+            'read' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>[]]
+            ]
+        ]
+    ],
+    itemOperations: [
+        'get' =>[
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
+        ],
+        'profile' => [
+            'pagination_enabled' => false,
+            'path' => '/profile',
+            'method' => 'get',
+            'controller' => ProfileController::class,
+            'read' => false,
+            'openapi_context' => [
+                'security' =>[
+                    'bearerAuth'=>['is_granted("ROLE_USER")']
+                ]
+            ]
+        ]
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -19,35 +62,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read','user:write'])]
+    private $firstname;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read','user:write'])]
+    private $lastname;
+
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Groups(['user:read','user:write'])]
     private $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
+    #[Groups(['user:write'])]
     private $password;
+    
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserAddress::class, cascade:['persist'], orphanRemoval: true)]
+    #[Groups(['user:read','user:write'])]
+    private $userAddresses;
+    
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserPayment::class, cascade:['persist'], orphanRemoval: true)]
+    #[Groups(['user:read','user:write'])]
+    private $userPayments;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class, cascade:['persist'])]
+    #[Groups(['user:read','user:write'])]
     private $orders;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private $firstname;
-
-    #[ORM\Column(type: 'string', length: 255)]
-    private $lastname;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime')]
     private $updatedAt;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserAddress::class, orphanRemoval: true)]
-    private $userAddresses;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserPayment::class, orphanRemoval: true)]
-    private $userPayments;
 
     public function __construct()
     {
@@ -82,9 +132,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
+        return (string) $this->id;
+    }
+    public function getUsername(): string
+    {
         return (string) $this->email;
     }
-
     /**
      * @see UserInterface
      */
@@ -257,5 +310,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+    /**
+     *
+     * @return Order|null
+     * @Groups({ "user:read" })
+     */
+    public function getCart(): ?Order
+    {
+        foreach ($this->orders as $order) {
+            if ($order->getStatus() == Order::STATUS_CART){
+                return $order;
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @return Order|null
+     * @Groups({ "user:read" })
+     */
+    public function getWishList(): ?Order
+    {
+        foreach ($this->orders as $order) {
+            if ($order->getStatus() == Order::STATUS_WISHLIST){
+                return $order;
+            }
+        }
+        return null;
     }
 }

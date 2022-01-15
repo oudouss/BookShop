@@ -2,26 +2,76 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\OrderRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\UserOwnedInterface;
+use App\Repository\OrderRepository;
+use App\Controller\PlaceOrderController;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
-#[ApiResource]
-class Order
+#[ApiResource(
+    paginationEnabled: false,
+    normalizationContext:['groups' => ['order:read']],
+    denormalizationContext:['groups' => ['order:write']],
+    collectionOperations: [
+        'get' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+        'post' => [
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ]
+    ],
+    itemOperations: [
+        'get' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+        'place' => [
+            'method' => 'POST',
+            'pagination_enabled' => false,
+            'path' => '/orders/{id}/place',
+            'controller' => PlaceOrderController::class,
+            'openapi_context' => [
+                'summary' => 'Place An Order',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => []
+                        ]
+                    ]
+                ],
+                'security' =>[
+                    'bearerAuth'=>['is_granted("ROLE_USER")']
+                ]
+            ]
+        ]
+    ]
+)]
+class Order implements UserOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user:read', 'order:read'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     private $user;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'order:read'])]
     private $status;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -30,7 +80,8 @@ class Order
     #[ORM\Column(type: 'datetime')]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'itemOrder', targetEntity: OrderItem::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'itemOrder', targetEntity: OrderItem::class, cascade:['persist'], orphanRemoval: true)]
+    #[Groups(['user:read', 'user:write', 'order:read', 'order:write'])]
     private $items;
 
     public function __construct()
@@ -132,6 +183,7 @@ class Order
      *
      * @return float
      */
+    #[Groups(['user:read', 'order:read'])]
     public function getTotal(): float
     {
         $total = 0;
@@ -147,6 +199,7 @@ class Order
      *
      * @return int
      */
+    #[Groups(['user:read', 'order:read'])]
     public function getCount(): int
     {
         $count = 0;

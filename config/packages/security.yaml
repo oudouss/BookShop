@@ -13,13 +13,73 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
+
+        api_books:
+            pattern:   ^/api/books
+            methods:    [GET]
+            security: false
+            stateless: true
+
+        api_categories:
+            pattern:   ^/api/categories
+            methods:    [GET]
+            security: false
+            stateless: true
+
+        api_register:
+            pattern:   ^/api/register
+            methods:    [POST]
+            security: false
+            stateless: true
+        
+        api_login:
+            pattern: ^/api/login$
             provider: app_user_provider
+            stateless: true
+            json_login:
+                check_path: /api/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        
+        api_profile:
+            pattern:   ^/api/profile
+            provider: app_user_provider
+            methods:    [GET]
+            stateless: true
+            jwt: ~     
+  
+        api_adress:
+            pattern:   ^/api/user_addresses
+            provider: app_user_provider
+            methods:    [GET, POST, PUT, PATCH, DELETE]
+            stateless: true
+            jwt: ~   
+
+        api_payment:
+            pattern:   ^/api/user_payments
+            provider: app_user_provider
+            methods:    [GET, POST, PUT, PATCH, DELETE]
+            stateless: true
+            jwt: ~   
+
+        api_orders:
+            pattern:   ^/api/orders
+            provider: app_user_provider
+            methods:    [GET, POST, PUT, PATCH, DELETE]
+            stateless: true
+            jwt: ~   
+
+        api_order_items:
+            pattern:   ^/api/order_items
+            provider: app_user_provider
+            methods:    [GET, POST, PUT, PATCH, DELETE]
+            stateless: true
+            jwt: ~
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -30,6 +90,16 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+         - { path: ^/api/books,             roles: PUBLIC_ACCESS,          methods: [GET] }
+         - { path: ^/api/categories,        roles: PUBLIC_ACCESS,          methods: [GET] }
+         - { path: ^/api/register,          roles: PUBLIC_ACCESS,          methods: [POST] }
+         - { path: ^/api/login,             roles: PUBLIC_ACCESS,          methods: [POST] }
+         - { path: ^/api/profile,           roles: IS_AUTHENTICATED_FULLY, methods: [GET] }
+         - { path: ^/api/user_addresses,    roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
+         - { path: ^/api/user_payments,     roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
+         - { path: ^/api/orders,            roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
+         - { path: ^/api/order_items,       roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
+
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 

@@ -12,11 +12,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
     paginationEnabled:false,
     normalizationContext:['groups' => ['books:read']],
     collectionOperations:[
-        'get',
+        'get' => [
+            'openapi_context' => [
+                'security' => []
+            ]
+        ],
     ],
     itemOperations: [
         'get' => [
-            'normalization_context' =>['groups' => ['books:read', 'book:read']]
+            'normalization_context' =>['groups' => ['books:read', 'book:read']],
+            'openapi_context' => [
+                'security' => []
+            ]
         ]
 
     ]
@@ -26,11 +33,11 @@ class Book
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['books:read', 'category:read'])]
+    #[Groups(['books:read', 'category:read', 'user:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['books:read', 'category:read'])]
+    #[Groups(['books:read', 'category:read', 'user:read'])]
     private $title;
 
     #[ORM\Column(type: 'text')]
@@ -42,7 +49,7 @@ class Book
     private $author;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    #[Groups(['books:read'])]
+    #[Groups(['books:read', 'user:read'])]
     private $price;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -50,7 +57,7 @@ class Book
     private $image;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['books:read'])]
+    #[Groups(['books:read', 'category:read'])]
     private $stock;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'books', cascade:['persist'])]

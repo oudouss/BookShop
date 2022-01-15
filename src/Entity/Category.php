@@ -14,11 +14,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
     paginationEnabled:false,
     normalizationContext:['groups' => ['categories:read']],
     collectionOperations:[
-        'get'
+        'get' => [
+            'openapi_context' => [
+                'security' => []
+            ]
+        ]
     ],
     itemOperations: [
         'get' => [
-            'normalization_context' =>['groups' => ['categories:read', 'category:read']]
+            'normalization_context' =>['groups' => ['categories:read', 'category:read']],
+            'openapi_context' => [
+                'security' => []
+            ]
         ]
 
     ]

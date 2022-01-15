@@ -2,17 +2,56 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\UserAddressRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\UserOwnedInterface;
+use App\Repository\UserAddressRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserAddressRepository::class)]
-#[ApiResource]
-class UserAddress
+#[ApiResource(
+    denormalizationContext:['groups' => ['adress:write']],
+    collectionOperations: [
+        'get' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+        'post' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+    ],
+    itemOperations: [
+        'get' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+        'patch' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+        'delete' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+    ]
+)]
+class UserAddress implements UserOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user:read'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userAddresses')]
@@ -20,21 +59,27 @@ class UserAddress
     private $user;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'user:write', 'adress:write'])]
     private $adressline1;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write', 'adress:write'])]
     private $adressline2;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'user:write', 'adress:write'])]
     private $city;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'user:write', 'adress:write'])]
     private $postalcode;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'user:write', 'adress:write'])]
     private $country;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['user:read', 'user:write', 'adress:write'])]
     private $phone;
 
     public function getId(): ?int

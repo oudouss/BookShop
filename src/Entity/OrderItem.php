@@ -2,27 +2,69 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\OrderItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\OrderItemRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    denormalizationContext:['groups' => ['item:write']],
+    collectionOperations: [
+        'get' =>[
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
+        ],
+        'post' =>[
+            'denormalization_context'=>['groups' => ['item:write','items:write']],
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+    ],
+    itemOperations: [
+        'get' =>[
+            'controller' => NotFoundAction::class,
+            'openapi_context' => ['summary' => 'hidden'],
+            'read' => false,
+            'output' => false
+        ],
+        'patch' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+        'delete' =>[
+            'pagination_enabled' => false,
+            'openapi_context' => [
+                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
+            ]
+        ],
+    ]
+)]
 class OrderItem
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user:read', 'order:read'])]
     private $id;
 
     #[ORM\ManyToOne(targetEntity: Book::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['user:read', 'user:write', 'order:read', 'order:write', 'items:write'])]
     private $book;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['user:read', 'user:write', 'order:read', 'order:write', 'item:write'])]
     private $quantity;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'items')]
+    #[Groups(['items:write'])]
     #[ORM\JoinColumn(nullable: true)]
     private $itemOrder;
 
@@ -83,6 +125,8 @@ class OrderItem
      *
      * @return float|int
      */
+    
+    #[Groups(['order:read'])]
     public function getTotal(): float
     {
         return $this->getBook()->getPrice() * $this->getQuantity();
