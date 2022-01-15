@@ -39,20 +39,14 @@ No need to create Database just run migrations
 symfony console doctrine:migrations:migrate 
 ```
 
-**Or Use XAMPP For Database**
+**Or If You Use Local Database like (XAMPP/WAWPP)**
 
+Create Database and run migrations
 ```
 symfony console doctrine:database:create
 ```
-
 ```
 symfony console doctrine:migrations:migrate 
-```
-
-**Loading fake Data**
-
-```
-symfony console doctrine:fixtures:load --no-interaction
 ```
 
 #### Generate the SSL keys:
@@ -68,6 +62,12 @@ Available options:
 - `--overwrite` will overwrite your keys if they already exist.
 
 Otherwise, an error will be raised to prevent you from overwriting your keys accidentally.
+
+**Loading fake Data**
+
+```
+symfony console doctrine:fixtures:load --no-interaction
+```
 
 **test Users**
 - User  `user@app.com/password`
