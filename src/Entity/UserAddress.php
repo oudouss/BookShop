@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\UserOwnedInterface;
 use App\Repository\UserAddressRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -60,6 +61,8 @@ class UserAddress implements UserOwnedInterface
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user:read', 'user:write', 'adress:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     private $adressline1;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -68,18 +71,26 @@ class UserAddress implements UserOwnedInterface
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user:read', 'user:write', 'adress:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     private $city;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user:read', 'user:write', 'adress:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     private $postalcode;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user:read', 'user:write', 'adress:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     private $country;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user:read', 'user:write', 'adress:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     private $phone;
 
     public function getId(): ?int

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\UserOwnedInterface;
 use App\Repository\OrderRepository;
 use App\Controller\PlaceOrderController;
@@ -48,7 +49,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'requestBody' => [
                     'content' => [
                         'application/json' => [
-                            'schema' => []
+                            'schema' => [],
+                            'example' =>'{}'
                         ]
                     ]
                 ],
@@ -80,8 +82,9 @@ class Order implements UserOwnedInterface
     #[ORM\Column(type: 'datetime')]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'itemOrder', targetEntity: OrderItem::class, cascade:['persist'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'itemOrder', targetEntity: OrderItem::class, cascade:['persist'], orphanRemoval: true)]    
     #[Groups(['user:read', 'user:write', 'order:read', 'order:write'])]
+    #[Assert\Valid()]
     private $items;
 
     public function __construct()

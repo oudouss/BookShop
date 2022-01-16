@@ -54,14 +54,14 @@ security:
             jwt: ~     
   
         api_adress:
-            pattern:   ^/api/user_addresses
+            pattern:   ^/api/user-addresses
             provider: app_user_provider
             methods:    [GET, POST, PUT, PATCH, DELETE]
             stateless: true
             jwt: ~   
 
         api_payment:
-            pattern:   ^/api/user_payments
+            pattern:   ^/api/user-payments
             provider: app_user_provider
             methods:    [GET, POST, PUT, PATCH, DELETE]
             stateless: true
@@ -75,7 +75,7 @@ security:
             jwt: ~   
 
         api_order_items:
-            pattern:   ^/api/order_items
+            pattern:   ^/api/order-items
             provider: app_user_provider
             methods:    [GET, POST, PUT, PATCH, DELETE]
             stateless: true
@@ -95,10 +95,10 @@ security:
          - { path: ^/api/register,          roles: PUBLIC_ACCESS,          methods: [POST] }
          - { path: ^/api/login,             roles: PUBLIC_ACCESS,          methods: [POST] }
          - { path: ^/api/profile,           roles: IS_AUTHENTICATED_FULLY, methods: [GET] }
-         - { path: ^/api/user_addresses,    roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
-         - { path: ^/api/user_payments,     roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
+         - { path: ^/api/user-addresses,    roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
+         - { path: ^/api/user-payments,     roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
          - { path: ^/api/orders,            roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
-         - { path: ^/api/order_items,       roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
+         - { path: ^/api/order-items,       roles: IS_AUTHENTICATED_FULLY, methods: [GET, POST, PUT, PATCH, DELETE] }
 
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }

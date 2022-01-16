@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\OrderItemRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -61,12 +62,16 @@ class OrderItem
 
     #[ORM\Column(type: 'integer')]
     #[Groups(['user:read', 'user:write', 'order:read', 'order:write', 'item:write'])]
+    #[Assert\NotNull()]
+    #[Assert\NotBlank()]
+    #[Assert\GreaterThanOrEqual(1)]
     private $quantity;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'items')]
-    #[Groups(['items:write'])]
     #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['items:write'])]
     private $itemOrder;
+
 
     public function getId(): ?int
     {

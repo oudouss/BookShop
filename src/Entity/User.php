@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Action\NotFoundAction;
 use Doctrine\Common\Collections\Collection;
@@ -64,14 +65,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user:read','user:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min:4)]
     private $firstname;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user:read','user:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\Length(min:4)]
     private $lastname;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(['user:read','user:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
+    #[Assert\Email(message: 'This is not a valid email.')]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -79,17 +87,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string')]
     #[Groups(['user:write'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
+    #[Assert\Length(min:8)]
     private $password;
     
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserAddress::class, cascade:['persist'], orphanRemoval: true)]
+    #[Assert\Valid()]
     #[Groups(['user:read','user:write'])]
     private $userAddresses;
     
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserPayment::class, cascade:['persist'], orphanRemoval: true)]
+    #[Assert\Valid()]
     #[Groups(['user:read','user:write'])]
     private $userPayments;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class, cascade:['persist'])]
+    #[Assert\Valid()]
     #[Groups(['user:read','user:write'])]
     private $orders;
 

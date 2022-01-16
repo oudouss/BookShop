@@ -1,4 +1,16 @@
 api_platform:
+    title: 'E-Library BookShop '
+    description: 'E-Library BookShop REST API'
+    version: '1.0.0'
+    openapi:
+        contact:
+            name: E-Library BookShop
+            url: https://127.0.0.1:8000
+            email: admin@app.com
+        termsOfService: https://127.0.0.1:8000/terms-of-service
+    show_webby: true
+    # path_segment_name_generator: 'api_platform.path_segment_name_generator.underscore'
+    path_segment_name_generator: 'api_platform.path_segment_name_generator.dash'
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
