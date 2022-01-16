@@ -8,7 +8,6 @@ use App\Repository\UserPaymentRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Constraints\CardScheme;
 
 #[ORM\Entity(repositoryClass: UserPaymentRepository::class)]
 #[ApiResource(
@@ -76,10 +75,6 @@ class UserPayment implements UserOwnedInterface
     #[Groups(['user:read', 'user:write', 'payment:write'])]
     #[Assert\NotBlank()]
     #[Assert\NotNull()]
-    #[Assert\CardScheme(
-        schemes: [Assert\CardScheme::VISA, Assert\CardScheme::MASTERCARD, Assert\CardScheme::MAESTRO],
-        message: 'Your credit card number is invalid.',
-    )]
     private $account;
 
     #[ORM\Column(type: 'string', length: 255)]
