@@ -27,23 +27,112 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $books=[];
+        $booksArray=[
+            [
+              "title"=> "Magical messages from the fairies",
+              "price"=> 30,
+              "stock"=> 1,
+              "image"=> "/img/product/product-1.jpg",
+              "smallimage"=> "/img/cart/cart-1.jpg",
+            ],
+            [
+              "title"=> "Healing with the Angels",
+              "price"=> 15,
+              "stock"=> 1,
+              "image"=> "/img/product/product-5.jpg",
+              "smallimage"=> "/img/cart/cart-5.jpg",
+            ],
+            [
+              "title"=> "Healing with the Angels II",
+              "price"=> 25,
+              "stock"=> 1,
+              "image"=> "/img/product/product-2.jpg",
+              "smallimage"=> "/img/cart/cart-2.jpg",
+            ],
+            [
+              "title"=> "Healing with the Angels III",
+              "price"=> 12,
+              "stock"=> 2,
+              "image"=> "/img/product/product-3.jpg",
+              "smallimage"=> "/img/cart/cart-3.jpg",
+            ],
+            [
+              "title"=> "Oracle of wisdom",
+              "price"=> 17,
+              "stock"=> 5,
+              "image"=> "/img/product/product-4.jpg",
+              "smallimage"=> "/img/cart/cart-4.jpg",
+            ],
+            [
+              "title"=> "The Light Seer's Tarot",
+              "price"=> 20,
+              "stock"=> 30,
+              "image"=> "/img/product/product-6.jpg",
+              "smallimage"=> "/img/cart/cart-6.jpg",
+            ],
+            [
+              "title"=> "Watermelon 1kg",
+              "price"=> 10,
+              "stock"=> 25,
+              "image"=> "/img/product/product-7.jpg",
+              "smallimage"=> "/img/cart/cart-7.jpg",
+            ],
+            [
+              "title"=> "Ethereal Visions",
+              "price"=> 8,
+              "stock"=> 10,
+              "image"=> "/img/product/product-8.jpg",
+              "smallimage"=> "/img/cart/cart-8.jpg",
+            ],
+            [
+              "title"=> "The Fountain Tarot",
+              "price"=> 25,
+              "stock"=> 14,
+              "image"=> "/img/product/product-9.jpg",
+              "smallimage"=> "/img/cart/cart-9.jpg",
+            ],
+            [
+              "title"=> "Moonology",
+              "price"=> 20,
+              "stock"=> 5,
+              "image"=> "/img/product/product-10.jpg",
+              "smallimage"=> "/img/cart/cart-10.jpg",
+            ],
+            [
+              "title"=> "Seventy-Eight Degrees of Wisdom",
+              "price"=> 2.5,
+              "stock"=> 27,
+              "image"=> "/img/product/product-11.jpg",
+              "smallimage"=> "/img/cart/cart-11.jpg",
+            ],
+            [
+              "title"=> "Simplicity Tarot",
+              "price"=> 15,
+              "stock"=> 35,
+              "image"=> "/img/product/product-12.jpg",
+              "smallimage"=> "/img/cart/cart-11.jpg",
+            ],
+        ];
         $faker = Factory::create();
-        for ($i = 1; $i <= 50; $i++) {
+        $id=0;
+        foreach($booksArray as $bookItem) {
+            $id++;
             $category = new Category();
-            $category->setName("Category #".mt_rand(1, 20));
+            $category->setName("Category #".$id);
             $manager->persist($category);
             $book = new Book();
             $book
-            ->setTitle("Book #".$i)
-            ->setDescription($faker->text(250))
+            ->setTitle($bookItem["title"])
+            ->setDescription($faker->text(150))
             ->setAuthor($faker->name())
-            ->setPrice(mt_rand(10, 600))
+            ->setPrice($bookItem["price"])
             ->setCategory($category)
-            ->setImage("https://dummyimage.com/450x300/dee2e6/6c757d.jpg")
-            ->setStock(mt_rand(10, 600));
+            ->setImage($bookItem["image"])
+            ->setSmallimage($bookItem["smallimage"])
+            ->setStock($bookItem["stock"]);
             
-            $books[]=$book;
             $manager->persist($book);
+            $books[]=$book;
         }
 
         $user = new User();

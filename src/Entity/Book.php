@@ -64,6 +64,9 @@ class Book
     #[Groups(['books:read'])]
     private $category;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $smallimage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -149,6 +152,18 @@ class Book
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getSmallimage(): ?string
+    {
+        return $this->smallimage;
+    }
+
+    public function setSmallimage(?string $smallimage): self
+    {
+        $this->smallimage = $smallimage;
 
         return $this;
     }
