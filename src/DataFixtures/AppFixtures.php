@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use Faker\Factory;
 use App\Entity\Book;
+use App\Entity\Category;
 use App\Entity\User;
 use App\Entity\Order;
 use App\Entity\OrderItem;
@@ -26,21 +27,24 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $books=[];
+        $faker = Factory::create();
         for ($i = 1; $i <= 50; $i++) {
+            $category = new Category();
+            $category->setName("Category #".mt_rand(1, 20));
+            $manager->persist($category);
             $book = new Book();
-            $faker = Factory::create();
             $book
             ->setTitle("Book #".$i)
             ->setDescription($faker->text(250))
             ->setAuthor($faker->name())
             ->setPrice(mt_rand(10, 600))
+            ->setCategory($category)
             ->setImage("https://dummyimage.com/450x300/dee2e6/6c757d.jpg")
             ->setStock(mt_rand(10, 600));
             
             $books[]=$book;
             $manager->persist($book);
         }
-        $manager->flush();
 
         $user = new User();
         $passHash = $this->encoder->hashPassword($user,"password");
