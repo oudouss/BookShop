@@ -48,7 +48,7 @@ class AppFixtures extends Fixture
           "smallimage"=> "cart-1.jpg",
         ],
         [
-          "title"=> "THE WITCHER BlOOD OF ELVES",
+          "title"=> "THE WITCHER BLOOD OF ELVES",
           "author"=> "ANDRZEJ SAPKOWSKI",
           "price"=> 150,
           "stock"=> 10,
