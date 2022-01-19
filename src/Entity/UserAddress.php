@@ -181,4 +181,13 @@ class UserAddress implements UserOwnedInterface
 
         return $this;
     }
+    public function __toString()
+    {
+        return (string) 
+        $this->getAdressline1().' - '
+        .$this->getAdressline2().' - '
+        .$this->getPostalcode().' - '
+        .$this->getCity().' - '
+        .$this->getCountry();
+    }
 }

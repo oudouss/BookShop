@@ -136,4 +136,9 @@ class OrderItem
     {
         return $this->getBook()->getPrice() * $this->getQuantity();
     }
+    
+    public function __toString()
+    {
+        return $this->book.' - Qty:'.$this->quantity;
+    }
 }

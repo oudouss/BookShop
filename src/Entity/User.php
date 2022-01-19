@@ -354,4 +354,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return null;
     }
+    public function getUserPhone()
+    {
+        foreach ($this->getUserAddresses() as  $adress) {
+            return (string) $adress->getPhone();
+        }
+    }
+    public function __toString()
+    {
+        return "$this->firstname $this->lastname";
+    }
+
 }

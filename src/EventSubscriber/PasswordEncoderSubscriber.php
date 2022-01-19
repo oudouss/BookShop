@@ -1,5 +1,5 @@
 <?php
-namespace App\EventSubsciber;
+namespace App\EventSubscriber;
 
 
 use App\Entity\User;

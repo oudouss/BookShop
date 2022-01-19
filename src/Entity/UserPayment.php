@@ -147,4 +147,10 @@ class UserPayment implements UserOwnedInterface
 
         return $this;
     }
+    public function __toString()
+    {
+        return (string) 
+        $this->type.' - '
+        .$this->provider;
+    }
 }

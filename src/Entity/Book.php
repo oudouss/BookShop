@@ -2,11 +2,18 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\BookRepository;
+use Gedmo\Mapping\Annotation as Gedmo;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
+/**
+ * @Vich\Uploadable
+ */
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[ApiResource(
     paginationEnabled:false,
@@ -53,8 +60,18 @@ class Book
     private $price;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['books:read'])]
-    private $image;
+    #[Groups(['books:read', 'category:read', 'order:read', 'user:read'])]
+    public $image;
+
+    /**
+     * @Vich\UploadableField(mapping="book_images", fileNameProperty="image")
+     * @var File|null
+     */
+    private $imageFile;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['books:read', 'category:read', 'order:read', 'user:read'])]
+    public $smallimage;
 
     #[ORM\Column(type: 'integer')]
     #[Groups(['books:read', 'category:read'])]
@@ -64,8 +81,23 @@ class Book
     #[Groups(['books:read'])]
     private $category;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $smallimage;
+    /**
+     * @Gedmo\Timestampable(on="create")
+     */
+    #[ORM\Column(type: 'datetime_immutable')]
+    private $createdAt;
+
+    /**
+     * @Gedmo\Timestampable(on="update")
+     */
+    #[ORM\Column(type: 'datetime')]
+    private $updatedAt;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -124,12 +156,28 @@ class Book
     {
         return $this->image;
     }
-
-    public function setImage(string $image): self
+    
+    public function setImage(string $image = null): self
     {
         $this->image = $image;
 
         return $this;
+    }
+    /**
+     * @param File|null $image
+     * @return void
+     */
+    public function setImageFile(File $image = null)
+    {
+        $this->imageFile = $image;
+        if ($image) {
+            $this->updatedAt = new \DateTime();
+        }
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
     }
 
     public function getStock(): ?int
@@ -166,6 +214,20 @@ class Book
         $this->smallimage = $smallimage;
 
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+    public function __toString()
+    {
+        return $this->title;
     }
 
 }

@@ -72,6 +72,10 @@ class Order implements UserOwnedInterface
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     private $user;
 
+    private $userEmail;
+
+    private $userAdress;
+
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['user:read', 'order:read'])]
     private $status;
@@ -213,6 +217,28 @@ class Order implements UserOwnedInterface
 
         return $count;
     }
+    public function getUserEmail():string
+    {
+        return (string) $this->getUser()->getEmail();
+    }
+    public function getUserAdress():string
+    {
+        foreach ($this->getUser()->getUserAddresses() as  $adress) {
+            return (string) 
+            $adress->getAdressline1().' - '
+            .$adress->getAdressline2().' - '
+            .$adress->getPostalcode().' - '
+            .$adress->getCity().' - '
+            .$adress->getCountry();
+        }
+
+    }
+    public function getUserPhone():string
+    {
+        foreach ($this->getUser()->getUserAddresses() as  $adress) {
+            return (string) $adress->getPhone();
+        }
+    }
     /**
      * An order that is in progress, not placed yet.
      *
@@ -232,6 +258,12 @@ class Order implements UserOwnedInterface
      * @var string
      */
     const STATUS_PLACED = 'Placed';
+    /**
+     * An order that is payed.
+     *
+     * @var string
+     */
+    const STATUS_PAYED = 'Payed';
 
     /**
      * An order that is In Progress.
@@ -246,5 +278,10 @@ class Order implements UserOwnedInterface
      * @var string
      */
     const STATUS_DELIVERED = 'Delivered';
+
+    public function __toString()
+    {
+        return (string) $this->user.' Order';
+    }
 
 }
