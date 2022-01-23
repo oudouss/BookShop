@@ -4,16 +4,18 @@ namespace App\DataFixtures;
 
 use Faker\Factory;
 use App\Entity\Book;
-use App\Entity\Category;
 use App\Entity\User;
+use App\Entity\Admin;
 use App\Entity\Order;
+use App\Entity\Category;
 use App\Entity\OrderItem;
 use App\Entity\UserAddress;
 use App\Entity\UserPayment;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+
 class AppFixtures extends Fixture
 {
 
@@ -202,17 +204,15 @@ class AppFixtures extends Fixture
       ->setExpiry('09/28');
       $manager->persist($payment);
 
+      
+      $useradmin = new Admin();
+      $passAdminHash = $this->encoder->hashPassword($useradmin,"password");
+      $useradmin
+      ->setName("SysAdmin")
+      ->setEmail("admin@app.com")
+      ->setPassword($passAdminHash);
+      
+      $manager->persist($useradmin);
       $manager->flush();
-
-      // $useradmin = new User();
-      // $passAdminHash = $this->encoder->hashPassword($useradmin,"password");
-      // $useradmin
-      // ->setFirstName("Sys")
-      // ->setLastName("Admin")
-      // ->setEmail("admin@app.com")
-      // ->setRoles(["ROLE_ADMIN"])
-      // ->setPassword($passAdminHash);
-
-      // $manager->persist($useradmin);
     }
 }

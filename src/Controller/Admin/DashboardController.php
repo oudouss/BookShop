@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Book;
 use App\Entity\User;
+use App\Entity\Admin;
 use App\Entity\Order;
 use App\Entity\Category;
 use App\Controller\Admin\OrderCrudController;
@@ -43,16 +44,17 @@ class DashboardController extends AbstractDashboardController
         return [
             MenuItem::linkToDashboard('Dashboard', 'fa fa-home'),
 
-            MenuItem::section('Website'),
-            MenuItem::linkToCrud('Categories', 'fa fa-tags', Category::class),
-            MenuItem::linkToCrud('Books', 'fa fa-file-text', Book::class),
-
-            MenuItem::section('Users'),
-            MenuItem::linkToCrud('Clients', 'fa fa-user', User::class),
-            // MenuItem::linkToCrud('Admins', 'fa fa-user', Admin::class),
-
             MenuItem::section('Orders'),
             MenuItem::linkToCrud('Orders', 'fa fa-shopping-cart', Order::class),
+            MenuItem::linkToCrud('Clients', 'fa fa-user', User::class),
+            MenuItem::section('Shop'),
+            MenuItem::linkToCrud('Books', 'fa fa-file-text', Book::class),
+            MenuItem::linkToCrud('Categories', 'fa fa-tags', Category::class),
+            
+            
+            MenuItem::section('Users'),
+            MenuItem::linkToCrud('Admins', 'fa fa-user', Admin::class),
+
 
         ];
     }

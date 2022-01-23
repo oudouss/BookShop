@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\BookRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -45,22 +46,33 @@ class Book
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['books:read', 'category:read', 'user:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     private $title;
 
     #[ORM\Column(type: 'text')]
     #[Groups(['book:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
+    #[Assert\Length(max:250)]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['books:read', 'category:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     private $author;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     #[Groups(['books:read', 'user:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     private $price;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['books:read', 'category:read', 'order:read', 'user:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     public $image;
 
     /**
@@ -75,6 +87,8 @@ class Book
 
     #[ORM\Column(type: 'integer')]
     #[Groups(['books:read', 'category:read'])]
+    #[Assert\NotBlank()]
+    #[Assert\NotNull()]
     private $stock;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'books', cascade:['persist'])]
