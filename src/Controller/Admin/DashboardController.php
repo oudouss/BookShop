@@ -32,7 +32,10 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('E-library BookShop');
+            ->setTitle('<img src="logo.png"/>');
+            // ->renderSidebarMinimized();
+            
+            
     }
 
     public function configureMenuItems(): iterable
