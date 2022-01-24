@@ -41,36 +41,36 @@ class Book
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['books:read', 'category:read', 'user:read'])]
+    #[Groups(['book:read', 'books:read', 'category:read', 'order:read', 'user:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['books:read', 'category:read', 'user:read'])]
+    #[Groups(['book:read', 'books:read', 'category:read', 'order:read', 'user:read'])]
     #[Assert\NotBlank()]
     #[Assert\NotNull()]
     private $title;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['book:read'])]
+    #[Groups(['book:read', 'books:read', 'category:read', 'order:read', 'user:read'])]
     #[Assert\NotBlank()]
     #[Assert\NotNull()]
     #[Assert\Length(max:250)]
     private $description;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['books:read', 'category:read'])]
+    #[Groups(['book:read', 'books:read', 'category:read', 'order:read', 'user:read'])]
     #[Assert\NotBlank()]
     #[Assert\NotNull()]
     private $author;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    #[Groups(['books:read', 'user:read'])]
+    #[Groups(['book:read', 'books:read', 'category:read', 'order:read', 'user:read'])]
     #[Assert\NotBlank()]
     #[Assert\NotNull()]
     private $price;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['books:read', 'category:read', 'order:read', 'user:read'])]
+    #[Groups(['book:read', 'books:read', 'category:read', 'order:read', 'user:read'])]
     #[Assert\NotBlank()]
     #[Assert\NotNull()]
     public $image;
@@ -82,17 +82,17 @@ class Book
     private $imageFile;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['books:read', 'category:read', 'order:read', 'user:read'])]
+    #[Groups(['book:read', 'books:read', 'category:read', 'order:read', 'user:read'])]
     public $smallimage;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(['books:read', 'category:read'])]
+    #[Groups(['book:read', 'books:read', 'category:read', 'order:read', 'user:read'])]
     #[Assert\NotBlank()]
     #[Assert\NotNull()]
     private $stock;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'books', cascade:['persist'])]
-    #[Groups(['books:read'])]
+    #[Groups(['book:read', 'books:read', 'order:read', 'user:read'])]
     private $category;
 
     /**
