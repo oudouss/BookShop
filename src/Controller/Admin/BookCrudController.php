@@ -26,7 +26,18 @@ class BookCrudController extends AbstractCrudController
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
-        ;
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action->setIcon('fa fa-plus-circle');
+            })
+            ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
+                return $action->setIcon('fa fa-eye');
+            })
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+                return $action->setIcon('fa fa-pencil');
+            })
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action->setIcon('fa fa-trash');
+            });
     }
     public function configureCrud(Crud $crud): Crud
     {

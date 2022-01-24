@@ -33,8 +33,9 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('<img src="logo.png"/>');
-            // ->renderSidebarMinimized();
+            ->setTitle('<img src="logo.png"/>')
+            // ->renderSidebarMinimized()
+        ;
             
             
     }

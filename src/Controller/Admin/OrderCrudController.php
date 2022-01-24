@@ -33,9 +33,13 @@ class OrderCrudController extends AbstractCrudController
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->disable(Action::DELETE)
-            ->disable(Action::NEW)
-        ;
+            ->disable(Action::NEW, Action::DELETE)
+            ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
+                return $action->setIcon('fa fa-eye');
+            })
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+                return $action->setIcon('fa fa-pencil');
+            });
     }
     
     public function configureFields(string $pageName): iterable

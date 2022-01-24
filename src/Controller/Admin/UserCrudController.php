@@ -30,9 +30,10 @@ class UserCrudController extends AbstractCrudController
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->disable(Action::DELETE)
-            ->disable(Action::NEW, Action::EDIT)
-        ;
+            ->disable(Action::DELETE, Action::NEW, Action::EDIT)
+            ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
+                return $action->setIcon('fa fa-eye');
+            });
     }
 
     public function configureFields(string $pageName): iterable
