@@ -26,7 +26,6 @@ class OrderCrudController extends AbstractCrudController
         return $crud
         ->setEntityLabelInSingular('Order')
         ->setEntityLabelInPlural('Orders')
-        ->setNumberFormat('%.2d')
         ;
     }
     public function configureActions(Actions $actions): Actions
