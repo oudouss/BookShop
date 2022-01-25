@@ -30,9 +30,15 @@ class UserCrudController extends AbstractCrudController
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
-            ->disable(Action::DELETE, Action::NEW, Action::EDIT)
+            ->disable(Action::NEW)
             ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $action) {
                 return $action->setIcon('fa fa-eye');
+            })            
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+                return $action->setIcon('fa fa-pencil');
+            })
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action->setIcon('fa fa-trash');
             });
     }
 
