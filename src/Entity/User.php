@@ -104,7 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class, cascade:['persist'])]
     #[Assert\Valid()]
-    #[Groups(['user:read','user:write'])]
+    #[Groups(['user:write'])]
     private $orders;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -328,8 +328,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      *
      * @return Order|null
-     * @Groups({ "user:read" })
      */
+    #[Groups(['user:read'])]
     public function getCart(): ?Order
     {
         foreach ($this->orders as $order) {
@@ -343,8 +343,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      *
      * @return Order|null
-     * @Groups({ "user:read" })
      */
+    #[Groups(['user:read'])]
     public function getWishList(): ?Order
     {
         foreach ($this->orders as $order) {

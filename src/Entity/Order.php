@@ -24,12 +24,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'openapi_context' => [
                 'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
             ]
-        ],
-        'post' => [
-            'pagination_enabled' => false,
-            'openapi_context' => [
-                'security' =>['bearerAuth'=>['is_granted("ROLE_USER")']]
-            ]
         ]
     ],
     itemOperations: [

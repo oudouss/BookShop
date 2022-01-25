@@ -131,7 +131,7 @@ class OrderItem
      * @return float|int
      */
     
-    #[Groups(['order:read'])]
+    #[Groups(['order:read', 'user:read'])]
     public function getTotal(): float
     {
         return $this->getBook()->getPrice() * $this->getQuantity();
