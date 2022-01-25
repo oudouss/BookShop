@@ -44,7 +44,6 @@ class BookCrudController extends AbstractCrudController
         return $crud
         ->setEntityLabelInSingular('Book')
         ->setEntityLabelInPlural('Books')
-        ->setNumberFormat('%.2d')
         ;
     }
     public function configureFields(string $pageName): iterable
