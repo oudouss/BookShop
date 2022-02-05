@@ -70,7 +70,6 @@ symfony console doctrine:fixtures:load --no-interaction
 ```
 
 **test Users**
-- User  `user@app.com/password`
 - Admin `admin@app.com/password`
 
 
